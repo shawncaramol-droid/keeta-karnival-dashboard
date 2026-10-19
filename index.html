@@ -676,7 +676,7 @@ function kpis(){
  ['Overall Impressions',kmN(a.impressions),latestLine('impressions')],['Overall Clicks',kmN(a.clicks),'Overall CTR '+pct(a.ctr)],['Overall Sessions',kmN(a.sessions),latestLine('sessions')],
  ['Average DAU'+(avg==null?'':` <small class="kv-dau-gap ${avg>=dailyTarget?'kv-up':'kv-down'}" title="Average DAU minus daily target">${avg>=dailyTarget?'+':''}${kmN((avg-dailyTarget)/1000)}K from ${kmN(dailyTarget/1000)}K</small>`),kmN(avg),`${dateLabel(vs.day)} DAU: ${kmN(today.users)}`],
  ['Overall Orders',kmN(a.orders),gap(a.orders,KV.targets.orders)]])+group('Cost and Return','kv-four',[
- ['Overall Spend',money(a.spend),latestLine('spend')],['CPDU',cpoMoney(ratio(a.spend,a.users)),'Spend ÷ summed daily users'],['CPO',cpoMoney(a.cpo),gap(a.cpo,KV.targets.cpo,' AED',true)],['Overall GMV',money(a.gmv),'Recorded order value']])+group('Audience','kv-four',[
+ ['Overall Spend',money(a.spend),latestLine('spend')],['CPDU',cpoMoney(ratio(a.spend,a.users)),'Spend ÷ summed daily users'],['CPO',cpoMoney(a.cpo),gap(a.cpo,KV.targets.cpo,' AED',true)],['Overall GMV',money(a.gmv==null?null:a.gmv/100),'Recorded order value (post-discount, ex-tips, cents ÷ 100)']])+group('Audience','kv-four',[
  ['SA1 Orders',pct(a.saShare),kmN(a.saOrders)+' orders · '+gap(a.saShare==null?null:a.saShare*100,KV.targets.saShare*100,' pp')],
  ['SA1 DAU',pct(ratio(saUsers,a.users)),kmN(days?ratio(saUsers,days):null)+' average daily users · S + A1'],
  ['PotChurn Users',kmN(pot),pct(ratio(pot,lt))+' of classified lifecycle users'],['PotChurn Orders',a.potOrders==null?'Awaiting data':kmN(a.potOrders),a.potOrders==null?'Placed-order lifecycle split pending':pct(a.potShare)+' of orders · target '+pct(KV.targets.potShare)]])+ '';
