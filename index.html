@@ -6698,7 +6698,6 @@ try {
     document.querySelector('.controls').hidden = true;
     $('#view').classList.remove('approved-report');
     $('#view').innerHTML = `
-<div class="kv-sample"><b>DATA SNAPSHOT</b> · Through ${dateLabel(vs.day)} · Imported snapshot, not a live feed. Missing measures remain unavailable.${vs.platform||vs.campaign||vs.audience?' · Scope: '+[vs.platform,vs.campaign,vs.audience].filter(Boolean).map(esc).join(' / '):''}</div>
 <div id="kv-overview" class="kv-page-section"><h2 class="kv-page-title">01. Brand Performance Overview</h2>${sec('kv-targets','Vs Target','',kpis())}${sec('kv-overview-budget','Budget Pacing','',running(plans.filter(pick)))}${sec('kv-target-tracking','Target Tracking','',targetTracking())}</div>
 <div id="kv-platform" class="kv-page-section"><h2 class="kv-page-title">02. Platforms & Audiences</h2>${sec('kv-platform-detail','Platform performance','Expand a platform for audience performance and budgets.',platforms())}</div>
 <div id="kv-daily" class="kv-page-section"><h2 class="kv-page-title">03. Daily Performance · DoD</h2>${sec('kv-daily-detail','Daily performance · DoD','Changes compare each day with the previous day. Share changes use percentage points; the first day has no comparison.',daily())}</div>
