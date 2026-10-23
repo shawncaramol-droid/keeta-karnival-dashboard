@@ -6497,7 +6497,8 @@ try {
       ['PotChurn Users', pct(x.potUserShare)],
       ['CTR', pct(x.ctr)],
       ['Order share', pct(ratio(x.orders, overall.orders))],
-      ['Clicks', kmN(x.clicks)]
+      ['Clicks', kmN(x.clicks)],
+      ['CVR (Sessions→Orders)', pct(ratio(x.orders, x.sessions))]
     ].map(([l, v]) => `<div><span>${l}</span><b>${v}</b></div>`).join('') + '</div>';
   }
 
