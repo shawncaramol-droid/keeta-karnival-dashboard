@@ -3184,7 +3184,7 @@ dialog.chart-expanded[open] {
 
 .kv-platforms {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px
 }
 
@@ -6515,7 +6515,7 @@ try {
 
   // PLATFORMS: performance uses the full campaign; paceBlock uses the budget window.
   function platforms() {
-    const ps = plans.filter(pick),
+    const ps = plans.filter(pick).filter(p => p.platform !== 'GDN' && p.platform !== 'YouTube'),
       all = agg(rows());
     return '<div class="kv-platforms">' + [...new Set(ps.map(p => p.platform))].map(platform => {
       const pp = ps.filter(p => p.platform === platform),
