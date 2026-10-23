@@ -5612,6 +5612,12 @@ header.top .kv-brand-logo {
 <style id="karnival-approved-refinements">
 /* Approved display refinements. Preserve cascade order; daily imports never edit CSS. */
 
+/* Platform summary cards (Meta/TikTok/Snapchat): larger fonts, CVR metric. Campaign detail grids inside "Show/hide campaigns" unaffected. Scoped 2026-10-23 owner feedback. */
+.kv-platforms .pcard .kv-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 18px}
+.kv-platforms>.pcard>.kv-stats>div span{font-size:11.5px!important;line-height:1.3}
+.kv-platforms>.pcard>.kv-stats>div b{font-size:17px!important;font-weight:700!important;white-space:normal}
+.kv-platforms .pcard .kv-pacing .kv-budget-left{font-size:20px!important;font-weight:700!important;color:#00633f!important;white-space:normal;line-height:1.35}
+
 .kv-target-tracking .kv-stats>div>span{font-size:16px;font-weight:700}
 .kv-audience-daily .kv-table table{min-width:0!important;width:100%;table-layout:fixed}
 .kv-audience-daily .kv-table th,.kv-audience-daily .kv-table td{padding:10px 5px!important;font-size:12px}
@@ -6497,7 +6503,8 @@ try {
       ['PotChurn Users', pct(x.potUserShare)],
       ['CTR', pct(x.ctr)],
       ['Order share', pct(ratio(x.orders, overall.orders))],
-      ['Clicks', kmN(x.clicks)]
+      ['Clicks', kmN(x.clicks)],
+      ['CVR (Sessions→Orders)', pct(ratio(x.orders, x.sessions))]
     ].map(([l, v]) => `<div><span>${l}</span><b>${v}</b></div>`).join('') + '</div>';
   }
 
