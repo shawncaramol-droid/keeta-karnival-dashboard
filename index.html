@@ -6751,12 +6751,48 @@ try {
     return activationFunnel() + html;
   }
 
+  // KOL ACTIVATIONS: voucher-code rerun 16-25 Oct 2026. Pack-level results are static, so they are hardcoded here like other rerun KOL tables.
+  const kolData = {
+    packs: ['OFFERATO4U', 'Rashid4U', 'Ghaneya4U', 'Moweezy4U', 'Hasan4U'],
+    sabClaim: [[111, 218, 88, 43, 45], [98, 101, 85, 80, 62], [108, 36, 30, 10, 6], [22, 75, 21, 7, 9], [0, 0, 0, 0, 1]],
+    sabRedeem: [[56, 89, 35, 16, 17], [32, 40, 40, 23, 19], [43, 10, 14, 4, 3], [11, 36, 8, 4, 5], [0, 0, 0, 0, 0]],
+    newRet: [[41, 464, 15, 198], [60, 366, 17, 137], [10, 180, 4, 70], [6, 128, 2, 62], [1, 0, 0, 0]]
+  };
+  const kolCell = (n, t) => t > 0 ? shareCell(n, t) : kmN(n);
+
+  function kolSab() {
+    const tiers = ['S', 'A1', 'A2', 'A3', 'B'];
+    const block = (matrix, label) => {
+      const totals = tiers.map((_, i) => matrix.reduce((s, r) => s + r[i], 0)),
+        grand = totals.reduce((a, b) => a + b, 0);
+      return `<div class="card"><h3>${label} · SAB split</h3>${table(['KOL pack', ...tiers, 'Total'], kolData.packs.map((p, j) => {
+        const r = matrix[j], t = r.reduce((a, b) => a + b, 0);
+        return [p, ...r.map(n => kolCell(n, t)), kolCell(t, grand)];
+      }), ['Total', ...totals.map(n => kolCell(n, grand)), kolCell(grand, grand)])}<p class="kv-small">Users claiming multiple KOL packs count in each pack, so the sum of pack rows exceeds distinct users. Percentages use each pack row total; Total-row percentages use the ${label.toLowerCase()} grand total. SAB tiers S/A1/A2/A3/B from snapshot aggr_user_sab_level_manual_result_ae_d dt=20261025; claims and redeems 16-25 Oct 2026.</p></div>`;
+    };
+    return `<div class="kv-grid">${block(kolData.sabClaim, 'Claims')}${block(kolData.sabRedeem, 'Redeems')}</div>`;
+  }
+
+  function kolNewRet() {
+    const cN = kolData.newRet.reduce((s, r) => s + r[0], 0),
+      cE = kolData.newRet.reduce((s, r) => s + r[1], 0),
+      cT = cN + cE,
+      rN = kolData.newRet.reduce((s, r) => s + r[2], 0),
+      rE = kolData.newRet.reduce((s, r) => s + r[3], 0),
+      rT = rN + rE;
+    return table(['KOL pack', 'New claimed', 'Existing claimed', 'Total claimed', 'New redeemed', 'Existing redeemed', 'Total redeemed'], kolData.packs.map((p, j) => {
+      const [cn, ce, rn, re] = kolData.newRet[j];
+      return [p, shareCell(cn, cT), shareCell(ce, cT), shareCell(cn + ce, cT), shareCell(rn, rT), shareCell(re, rT), shareCell(rn + re, rT)];
+    }), ['Total', shareCell(cN, cT), shareCell(cE, cT), shareCell(cT, cT), shareCell(rN, rT), shareCell(rE, rT), shareCell(rT, rT)]) + '<p class="kv-small">New = first visit on/after 18 Sep 2026 (Karnival launch); Existing = first visit before. Unattributed users are 0 in this window. Claimed-column percentages use the claims grand total; redeemed-column percentages use the redeems grand total. Window: 16-25 Oct 2026.</p>';
+  }
+
   const nav = [
     ['kv-overview', '01. Brand Performance Overview'],
     ['kv-platform', '02. Platforms & Audiences'],
     ['kv-daily', '03. Daily Performance · DoD'],
     ['kv-audience', '04. Audiences'],
-    ['kv-activation', '05. Marketing Offline Activation']
+    ['kv-activation', '05. Marketing Offline Activation'],
+    ['kv-kol', '06. KOL Activations']
   ];
   document.querySelector('.tabs').innerHTML = nav.map(([id, l]) => `<button data-tab="${id}">${l}</button>`).join('');
   document.querySelector('.tabs').classList.add('kv-tabs');
@@ -6769,6 +6805,7 @@ try {
 <div id="kv-daily" class="kv-page-section"><h2 class="kv-page-title">03. Daily Performance · DoD</h2>${sec('kv-daily-detail','Daily performance · DoD','Changes compare each day with the previous day. Share changes use percentage points; the first day has no comparison.',daily())}</div>
 <div id="kv-audience" class="kv-page-section"><h2 class="kv-page-title">04. Audiences</h2>${sec('kv-audience-detail','Customer contribution','',audience())}</div>
 <div id="kv-activation" class="kv-page-section"><h2 class="kv-page-title">05. Marketing Offline Activation</h2>${sec('kv-activation-detail','Activation response','',activation())}</div>
+<div id="kv-kol" class="kv-page-section"><h2 class="kv-page-title">06. KOL Activations</h2>${sec('kv-kol-sab','KOL voucher SAB split','KOL voucher-code rerun, 16-25 Oct 2026: claims and redeems per pack by SAB tier. Counts show the share of each pack total next to them.',kolSab())}${sec('kv-kol-newret','KOL vouchers · New vs Existing','Claims and redeems per KOL pack split by first-visit cohort.',kolNewRet())}</div>
 `;
     vbind();
   };
