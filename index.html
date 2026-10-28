@@ -5309,6 +5309,10 @@ body>.notes {
   overflow-x: auto
 }
 
+.chart.kv-voucher-chart svg {
+  width: auto
+}
+
 .kv-voucher-split {
   display: flex;
   gap: 18px
@@ -5649,6 +5653,9 @@ header.top .kv-brand-logo {
 #kv-kol-kpis .kv-change{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 10px;font-size:10px;line-height:1.5;margin-top:8px}
 #kv-kol-kpis .kv-change span{white-space:nowrap}
 #kv-kol-kpis .kv-kol-chart{min-width:0;padding:16px 18px}
+#kv-kol-kpis .kv-kpis .pcard{min-height:0;padding:10px 12px}
+#kv-kol-kpis .kv-kpis .big{font-size:20px;margin:6px 0}
+#kv-kol-kpis .kv-kpis .kv-change{margin-top:4px}
 @media(max-width:1100px){#kv-kol-kpis .kv-kol-top{grid-template-columns:1fr}}
 
 </style></head><body>
@@ -6756,7 +6763,7 @@ try {
       return (change>=0?'+':'')+kmN(change,1)+'%';
     };
     let chart = valid.length ? `<svg viewBox="0 0 ${width} 230" width="${width}" height="230" role="img" aria-label="Daily voucher ${metric}"><line x1="30" y1="190" x2="${width-20}" y2="190" stroke="#d5e0d9"/>${vals.map((v,i)=>v==null?'':`${i&&vals[i-1]!=null?`<line x1="${x(i-1)}" y1="${y(vals[i-1])}" x2="${x(i)}" y2="${y(v)}" stroke="#00875f" stroke-width="2"/>`:''}<circle cx="${x(i)}" cy="${y(v)}" r="5" fill="#00875f"/><text x="${x(i)}" y="${y(v)-13}" text-anchor="middle" font-size="13">${kmN(v)}</text><text class="kv-activation-dod" x="${x(i)}" y="${y(v)+22}" text-anchor="middle" font-size="10" fill="${activationDoD(dates[i]).startsWith('-')?'#b24b40':activationDoD(dates[i]).startsWith('+')?'#00875f':'#587267'}">${activationDoD(dates[i])}</text>`).join('')}${dates.map((d,i)=>`<text x="${x(i)}" y="215" text-anchor="middle" font-size="12">${new Date(String(d).slice(0,4)+'-'+String(d).slice(4,6)+'-'+String(d).slice(6,8)+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'})}</text>`).join('')}</svg>` : '<p class="kv-empty">Unavailable for this activation and metric.</p>';
-    html += `<div class="kv-toolbar">${selector('v-voucher-campaign','Activation',mapping.map(m=>m.name),chosen,'Overall')}${selector('v-voucher-metric','Metric',keys.map((k,i)=>[k,labels[i]]),metric)}</div><div class="kv-grid kv-voucher-analysis"><div class="card"><h3>${esc(labels[keys.indexOf(metric)])} · daily trend</h3><div class="kv-voucher-chart">${chart}</div><p class="kv-small">Reported records only. ${dates.length<2?'DoD change needs a second day.':'Daily values through the selected reporting date.'}</p></div><div class="card"><h3>New / Returning · ${esc(labels[keys.indexOf(metric)])}</h3><p>${esc(chosen||'All activations')}</p><div class="kv-voucher-split"><div>New Customers<strong>${fmt(segmentValue(rs,metric,'new'))}</strong></div><div>Returning Customers<strong>${fmt(segmentValue(rs,metric,'returning'))}</strong></div></div><p class="kv-small">New/Returning split for the selected metric; unavailable values require source data.</p></div></div>`;
+    html += `<div class="kv-toolbar">${selector('v-voucher-campaign','Activation',mapping.map(m=>m.name),chosen,'Overall')}${selector('v-voucher-metric','Metric',keys.map((k,i)=>[k,labels[i]]),metric)}</div><div class="kv-grid kv-voucher-analysis"><div class="card"><h3>${esc(labels[keys.indexOf(metric)])} · daily trend</h3><div class="chart kv-voucher-chart">${chart}</div><p class="kv-small">Reported records only. ${dates.length<2?'DoD change needs a second day.':'Daily values through the selected reporting date.'}</p></div><div class="card"><h3>New / Returning · ${esc(labels[keys.indexOf(metric)])}</h3><p>${esc(chosen||'All activations')}</p><div class="kv-voucher-split"><div>New Customers<strong>${fmt(segmentValue(rs,metric,'new'))}</strong></div><div>Returning Customers<strong>${fmt(segmentValue(rs,metric,'returning'))}</strong></div></div><p class="kv-small">New/Returning split for the selected metric; unavailable values require source data.</p></div></div>`;
     return activationFunnel() + html;
   }
 
@@ -6816,7 +6823,7 @@ try {
     const xx = i => L + i * (W - L - R) / Math.max(1, points.length - 1),
       yy = v => T + (max - v) / (max - min) * (H - T - B);
     const svg = `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;min-width:${W}px;height:${H}px" role="img" aria-label="KOL vouchers ${metric} per day"><line x1="${L}" x2="${W - R}" y1="${H - B + 7}" y2="${H - B + 7}" stroke="#e5ece7"/><polyline points="${points.map((p, i) => xx(i) + ',' + yy(p.value)).join(' ')}" fill="none" stroke="#00875f" stroke-width="2"/>${points.map((p, i) => `<circle cx="${xx(i)}" cy="${yy(p.value)}" r="4.5" fill="#00875f" stroke="white" stroke-width="1"><title>Day ${p.day}: ${kmN(p.value)}</title></circle><text class="kv-point-value" x="${xx(i)}" y="${yy(p.value) - 12}" text-anchor="middle" font-size="12">${kmN(p.value)}</text><text x="${xx(i)}" y="${yy(p.value) + 17}" text-anchor="middle" font-size="10" fill="${p.dod == null || p.dod === 0 ? '#6c7c73' : p.dod > 0 ? '#00875f' : '#c94c43'}">${p.dod == null ? '—' : (p.dod > 0 ? '+' : '') + kmN(p.dod, 1) + '%'}</text><text x="${xx(i)}" y="${H - 19.2}" text-anchor="middle" font-size="11.52" fill="#173d30">Day ${p.day}</text><text x="${xx(i)}" y="${H - 4.48}" text-anchor="middle" font-size="8.32" fill="#75877d">${dateLabel(p.day)}</text>`).join('')}</svg>`;
-    return `<div class="chart km-chart" tabindex="0">${svg}</div><p class="kv-small">Distinct users claiming or redeeming a KOL voucher code each day; DoD compares with the previous day. Redeems for recent days may rise as usage backfills.</p>`;
+    return `<div class="chart km-chart" tabindex="0">${svg}</div>`;
   }
 
   function kolKpis() {
